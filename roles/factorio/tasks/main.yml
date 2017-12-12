@@ -1,0 +1,45 @@
+---
+- name: "Install pre-reqs from apt"
+  apt: 
+    pkg: "{{ item }}" 
+    state: installed
+  with_items:  
+    - python-pip
+    - git
+
+- name: "Install factorio updater requirements"
+  pip: 
+    name: "{{ item }}" 
+    state: latest
+  with_items:
+    - requests
+
+- name: "Install fac"
+  pip: 
+    name: "{{ item }}"
+    state: latest
+    executable: pip3
+  with_items:
+    - fac-cli
+
+- name: "Create user for the factorio server"
+  user:
+    name: factorio
+
+- name: "Create home for all the factorio stuff"
+  file: 
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+    owner: factorio
+    group: factorio
+  with_items:
+    - /opt/factorio
+    - /opt/factorio/downloader 
+
+- name: "Get factorio-updater"
+  git: 
+    dest: /opt/factorio/factorio-updater
+    repo: https://github.com/narc0tiq/factorio-updater
+
+- 

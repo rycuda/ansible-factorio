@@ -1,0 +1,5 @@
+---
+- name: "Install software for DNS server"
+  apt: pkg={{ item }} state=installed
+  with_items:  
+    - bind9

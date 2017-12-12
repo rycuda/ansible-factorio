@@ -1,0 +1,9 @@
+---
+- name: "Install basic software"
+  apt: pkg={{ item }} state=installed
+  with_items:  
+    - vim
+    - screen
+    - sudo
+    - ssh
+    - curl
