@@ -35,11 +35,35 @@
     group: factorio
   with_items:
     - /opt/factorio
-    - /opt/factorio/downloader 
+    - /opt/factorio/archive
+    - /opt/factorio/game
+    - /opt/factorio/instances/
+    - /opt/factorio/instances/config
+    - /opt/factorio/instances/mods
+
+- name: "Get factorio-downloader"
+  git: 
+    dest: /opt/factorio/factorio-downloader
+    repo: https://github.com/rycuda/factorio-downloader
 
 - name: "Get factorio-updater"
   git: 
     dest: /opt/factorio/factorio-updater
     repo: https://github.com/narc0tiq/factorio-updater
 
+- name: "get factorio download URL"
+  command: python3 /opt/factorio/factorio-downloader/get_factorio.py
+  register: factorio_url
+  args:
+    chdir: /opt/factorio/archive
 
+- name: "Download factorio"
+  get_url:
+    url: " {{ factorio_url.stdout }} "
+    dest: /opt/factorio/archive/factorio.tar.xz
+
+- name: "Extract factorio"
+  unarchive:
+    src: /opt/factorio/archive/factorio.tar.xz
+    dest: /opt/factorio/game/
+    remote_src: yes
